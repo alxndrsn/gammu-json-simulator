@@ -1,3 +1,8 @@
+gammu-json simulator
+====================
+
+A simulated mobile device for use when a real SMS modem is not available.  This utility is a drop-in replacement for `gammu-json`.
+
 # Usage
 
 ## Using it instead of real `gammu-json`
