@@ -1,0 +1,11 @@
+{
+  "name": "mock-gammu-json",
+  "version": "0.1.0",
+  "description": "A mock of gammu-json for use in testing.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --timeout 200 test/**/*.js"
+  },
+  "author": "Alex Anderson",
+  "license": "MIT"
+}

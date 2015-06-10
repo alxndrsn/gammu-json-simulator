@@ -1,0 +1,14 @@
+#!/usr/bin/env bash -eu
+
+project_dir=$(dirname $0)/..
+log=$project_dir/log/calls.log
+touch $log
+
+echo "=====
+$(date)
+----- IN -----
+$@
+----- OUT -----" >> $log
+
+node $project_dir/lib/index.js "$@" | tee -a $log
+
