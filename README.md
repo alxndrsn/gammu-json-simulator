@@ -8,4 +8,18 @@ Add the `bin/` directory for this project to the head of your `PATH` environment
 
 ## Seeing what's going on
 
+To see the log of conversation between `node-gammu-json` and `gammu-json`:
+
 	tail -F log/calls.log
+
+### Received messages
+
+To simulate a Mobile Terminating message on the device, put it in:
+
+	runtime/received
+
+### Sending messages
+
+To see what Mobile Originating messages have been 'sent' by the device, look in:
+
+	runtime/sent
