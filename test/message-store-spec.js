@@ -10,6 +10,7 @@ describe('message store', function() {
   beforeEach(function() {
     stubs.readdir = sinon.stub(fs, 'readdirSync');
     stubs.unlink = sinon.stub(fs, 'unlinkSync');
+    stubs.writeFile = sinon.stub(fs, 'writeFileSync');
   });
 
   afterEach(function() {
@@ -39,6 +40,7 @@ describe('message store', function() {
       // then
       assert.equal(stubs.unlink.called, 1);
       assert.ok(stub.unlink.calledWith('./runtime/received/1'));
+    });
   });
 
   describe('#send()', function() {
@@ -56,7 +58,7 @@ describe('message store', function() {
       messageStore.saveSent(messageData);
 
       // then
-      assert.equal(stubs.writeFile.callCount, 1));
+      assert.equal(stubs.writeFile.callCount, 1);
       assert.ok(stubs.writeFile.calledWith(
           './runtime/sent/1', JSON.stringify(messageData)));
     });
