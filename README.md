@@ -13,7 +13,7 @@ Add the `bin/` directory for this project to the head of your `PATH` environment
 
 ## Seeing what's going on
 
-To see the log of conversation between [`node-gammu-json`][2] and [`gammu-json`][1]:
+To see the log of conversation between [`node-gammu-json`][2] and `gammu-json-simulator`:
 
 	tail -F log/calls.log
 
