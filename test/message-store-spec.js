@@ -11,6 +11,8 @@ describe('message store', function() {
     stubs.readdir = sinon.stub(fs, 'readdirSync');
     stubs.unlink = sinon.stub(fs, 'unlinkSync');
     stubs.writeFile = sinon.stub(fs, 'writeFileSync');
+
+    messageStore.resetReferenceNumbers();
   });
 
   afterEach(function() {
@@ -70,21 +72,36 @@ describe('message store', function() {
   describe('#send()', function() {
     it('should save the message to a file', function() {
       // given
-      var messageData = {
-          "index": 1,
-          "reference": 254,
-          "status": 0,
-          "content": "This is a test message. الحروف عربية. ان شاء الله.",
-          "result": "success"
-      };
+      var to = '+123456789',
+          content =  'This is a test message.';
 
       // when
-      messageStore.saveSent(messageData);
+      var response = messageStore.saveSent(to, content);
 
       // then
       assert.equal(stubs.writeFile.callCount, 1);
       assert.ok(stubs.writeFile.calledWith(
-          './runtime/originating/1', JSON.stringify(messageData)));
+          './runtime/originating/1',
+          JSON.stringify({ to: '+123456789', text: 'This is a test message.' })
+      ));
+      assert.equal(response, '1');
+    });
+
+    it('should respond with incrementing reference numbers', function() {
+      // when
+      var response1 = messageStore.saveSent('1', 'hi'),
+          response2 = messageStore.saveSent('2', 'bye');
+
+      // then
+      assert.equal(response1, '1');
+      assert.equal(response2, '2');
+
+      // andt
+      assert.deepEqual(stubs.writeFile.args, [
+          [ './runtime/originating/1', JSON.stringify({ to:'1', text:'hi' }) ],
+          [ './runtime/originating/2', JSON.stringify({ to:'2', text:'bye' }) ]
+        ]
+      );
     });
   });
 });
