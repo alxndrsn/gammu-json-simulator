@@ -5,12 +5,28 @@ var assert = require('chai').assert,
     messageStore = require('../lib/message-store.js');
 
 describe('message store', function() {
-  var stubs = {};
+  var availableFiles, stubs;
 
   beforeEach(function() {
+    availableFiles = {};
+    stubs = {};
     stubs.readdir = sinon.stub(fs, 'readdirSync');
     stubs.unlink = sinon.stub(fs, 'unlinkSync');
     stubs.writeFile = sinon.stub(fs, 'writeFileSync');
+    stubs.readfile = sinon.stub(fs, 'readFileSync', function(path, options) {
+      var FILE_WHITELIST = new RegExp('^\./runtime/terminating/.*'),
+          file;
+      if(!(options && options.encoding === 'UTF-8')) {
+        throw new Error('Must request UTF-8 encoding of path!');
+      }
+      if(!FILE_WHITELIST.test(path)) {
+        throw new Error('Should only open paths in ./runtime/terminating/ dir' +
+            '\n\tAttempted to open: ' + path);
+      }
+      // strip directories from provided path
+      file = path.substring(22);
+      return availableFiles[file];
+    });
 
     messageStore.resetReferenceNumbers();
   });
@@ -66,6 +82,46 @@ describe('message store', function() {
       assert.ok(stubs.unlink.calledWith('./runtime/terminating/1'));
       assert.ok(stubs.unlink.calledWith('./runtime/terminating/2'));
       assert.ok(stubs.unlink.calledWith('./runtime/terminating/3'));
+    });
+  });
+
+  describe('#retrieve()', function() {
+    it('should return empty list if no MT messages are available', function() {
+      // given
+      stubs.readdir.returns([]);
+
+      // when
+      var result = messageStore.retrieve();
+
+      // then
+      assert.deepEqual(result, []);
+    });
+
+    it('should return single item list if 1 message available', function() {
+      // given
+      stubs.readdir.returns(['1']);
+      availableFiles = { 1:'"hello"' };
+
+      // when
+      var result = messageStore.retrieve();
+
+      // then
+      assert.deepEqual(result, ['hello']);
+    });
+
+    it('should return all items if multiple messages available', function() {
+      // given
+      stubs.readdir.returns(['1', '2']);
+      availableFiles = {
+        1: '"hello"',
+        2: '{ "has_val":true }'
+      };
+
+      // when
+      var result = messageStore.retrieve();
+
+      // then
+      assert.deepEqual(result, ['hello', { has_val:true }]);
     });
   });
 
