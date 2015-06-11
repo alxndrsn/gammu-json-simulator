@@ -20,7 +20,7 @@ describe('del', function() {
 
   it('should respond with success for selective del', function() {
     // when
-    var response = del(['1', '2', '3']);
+    var response = del('1', '2', '3');
 
     // then
     assert.deepEqual(response, {
@@ -36,7 +36,7 @@ describe('del', function() {
 
   it('should delete corresponding message files for selective del', function() {
     // when
-    var response = del(['1', '2', '3']);
+    var response = del('1', '2', '3');
 
     // then
     assert.equal(stubs.del.callCount, 3);
@@ -44,7 +44,7 @@ describe('del', function() {
 
   it('should respond with success to `all`', function() {
     // when
-    var response = del(['all']);
+    var response = del('all');
 
     // then
     assert.deepEqual(response, {
@@ -59,7 +59,7 @@ describe('del', function() {
 
   it('should delete corresponding message files for del all', function() {
     // when
-    var response = del(['all']);
+    var response = del('all');
 
     // then
     assert.equal(stubs.del.callCount, 10);
