@@ -1,7 +1,23 @@
-var assert = require('chai').assert;
+var assert = require('chai').assert,
+    sinon = require('sinon'),
+    fs = require('fs'),
+    _ = require('lodash'),
+    messageStore = require('../lib/message-store');
 
 describe('del', function() {
-  var del = require('../lib/del');
+  var del = require('../lib/del'),
+      stubs;
+
+  beforeEach(function() {
+    stubs = {};
+    stubs.del = sinon.stub(messageStore, 'delete');
+    stubs.available = sinon.stub(messageStore, 'available')
+        .returns(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
+  });
+
+  afterEach(function() {
+    _.each(stubs, function(stub) { stub.restore(); });
+  });
 
   it('should respond with success for selective del', function() {
     // when
@@ -18,6 +34,15 @@ describe('del', function() {
           errors:0, examined:10, skipped:7 }
     });
   });
+
+  it('should delete corresponding message files for selective del', function() {
+    // when
+    var response = del(['1', '2', '3']);
+
+    // then
+    assert.equal(stubs.del.callCount, 3);
+  });
+
   it('should respond with success to `all`', function() {
     // when
     var response = del(['all']);
@@ -31,5 +56,13 @@ describe('del', function() {
       totals: { requested:'all', attempted:10, deleted:10,
           errors:0, examined:10, skipped:0 }
     });
+  });
+
+  it('should delete corresponding message files for del all', function() {
+    // when
+    var response = del(['all']);
+
+    // then
+    assert.equal(stubs.del.callCount, 10);
   });
 });
