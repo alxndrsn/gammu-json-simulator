@@ -2,14 +2,12 @@ var assert = require('chai').assert,
     sinon = require('sinon'),
     fs = require('fs'),
     _ = require('lodash'),
-    MessageStore = require('../lib/message-store.js').MessageStore;
+    messageStore = require('../lib/message-store.js');
 
 describe('message store', function() {
-  var stubs = {},
-      messageStore;
+  var stubs = {};
 
   beforeEach(function() {
-    messageStore = new MessageStore();
     stubs.readdir = sinon.stub(fs, 'readdirSync');
     stubs.unlink = sinon.stub(fs, 'unlinkSync');
     stubs.writeFile = sinon.stub(fs, 'writeFileSync');
