@@ -1,6 +1,5 @@
 var assert = require('chai').assert,
     sinon = require('sinon'),
-    fs = require('fs'),
     _ = require('lodash'),
     messageStore = require('../lib/message-store');
 
