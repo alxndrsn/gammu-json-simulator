@@ -21,7 +21,7 @@ To see the log of conversation between [`node-gammu-json`][2] and [`gammu-json`]
 
 To simulate a Mobile Terminating message on the device, put it in:
 
-	runtime/received
+	.gammu-json-simulator/received
 
 The file should be JSON matching the spec for [gammu-json][1], e.g.:
 
@@ -46,7 +46,7 @@ N.B. these files *may be deleted* by the simulator.
 
 To see what Mobile Originating messages have been 'sent' by the device, look in:
 
-	runtime/sent
+	.gammu-json-simulator/sent
 
 [1]: https://github.com/medic/gammu-json
 [2]: https://github.com/medic/node-gammu-json

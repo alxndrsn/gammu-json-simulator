@@ -14,17 +14,17 @@ describe('message store', function() {
     stubs.unlink = sinon.stub(fs, 'unlinkSync');
     stubs.writeFile = sinon.stub(fs, 'writeFileSync');
     stubs.readfile = sinon.stub(fs, 'readFileSync', function(path, options) {
-      var FILE_WHITELIST = new RegExp('^\./runtime/terminating/.*'),
+      var FILE_WHITELIST = new RegExp('^\./\.gammu-json-simulator/terminating/.*'),
           file;
       if(!(options && options.encoding === 'UTF-8')) {
         throw new Error('Must request UTF-8 encoding of path!');
       }
       if(!FILE_WHITELIST.test(path)) {
-        throw new Error('Should only open paths in ./runtime/terminating/ dir' +
+        throw new Error('Should only open paths in ./.gammu-json-simulator/terminating/ dir' +
             '\n\tAttempted to open: ' + path);
       }
       // strip directories from provided path
-      file = path.substring(22);
+      file = path.substring('./.gammu-json-simulator/terminating/'.length);
       return availableFiles[file];
     });
 
@@ -40,7 +40,7 @@ describe('message store', function() {
   describe('#available()', function() {
     it('should check the /terminating directory for available messages', function() {
       // given
-      stubs.readdir.withArgs('./runtime/terminating/').returns(['1', '4', '6']);
+      stubs.readdir.withArgs('./.gammu-json-simulator/terminating/').returns(['1', '4', '6']);
 
       // when
       var available = messageStore.available();
@@ -57,7 +57,7 @@ describe('message store', function() {
 
       // then
       assert.equal(stubs.unlink.callCount, 1);
-      assert.ok(stubs.unlink.calledWith('./runtime/terminating/3'));
+      assert.ok(stubs.unlink.calledWith('./.gammu-json-simulator/terminating/3'));
     });
 
     it('should unlink multiple requested files', function() {
@@ -66,8 +66,8 @@ describe('message store', function() {
 
       // then
       assert.equal(stubs.unlink.callCount, 2);
-      assert.ok(stubs.unlink.calledWith('./runtime/terminating/3'));
-      assert.ok(stubs.unlink.calledWith('./runtime/terminating/6'));
+      assert.ok(stubs.unlink.calledWith('./.gammu-json-simulator/terminating/3'));
+      assert.ok(stubs.unlink.calledWith('./.gammu-json-simulator/terminating/6'));
     });
 
     it('should unlink all available if "all" supplied as arg', function() {
@@ -79,9 +79,9 @@ describe('message store', function() {
 
       // then
       assert.equal(stubs.unlink.callCount, 3);
-      assert.ok(stubs.unlink.calledWith('./runtime/terminating/1'));
-      assert.ok(stubs.unlink.calledWith('./runtime/terminating/2'));
-      assert.ok(stubs.unlink.calledWith('./runtime/terminating/3'));
+      assert.ok(stubs.unlink.calledWith('./.gammu-json-simulator/terminating/1'));
+      assert.ok(stubs.unlink.calledWith('./.gammu-json-simulator/terminating/2'));
+      assert.ok(stubs.unlink.calledWith('./.gammu-json-simulator/terminating/3'));
     });
   });
 
@@ -137,7 +137,7 @@ describe('message store', function() {
       // then
       assert.equal(stubs.writeFile.callCount, 1);
       assert.ok(stubs.writeFile.calledWith(
-          './runtime/originating/1',
+          './.gammu-json-simulator/originating/1',
           JSON.stringify({ to: '+123456789', text: 'This is a test message.' })
       ));
       assert.equal(response, '1');
@@ -154,8 +154,8 @@ describe('message store', function() {
 
       // andt
       assert.deepEqual(stubs.writeFile.args, [
-          [ './runtime/originating/1', JSON.stringify({ to:'1', text:'hi' }) ],
-          [ './runtime/originating/2', JSON.stringify({ to:'2', text:'bye' }) ]
+          [ './.gammu-json-simulator/originating/1', JSON.stringify({ to:'1', text:'hi' }) ],
+          [ './.gammu-json-simulator/originating/2', JSON.stringify({ to:'2', text:'bye' }) ]
         ]
       );
     });
