@@ -9,7 +9,7 @@ A simulated mobile device for use when a real SMS modem is not available.  This 
 
 Add the `bin/` directory for this project to the head of your `PATH` environment variable to override the real [`gammu-json`][1] executable.  E.g. when testing [medic-transport][3]:
 
-	PATH=../mock-gammu-json/bin:$PATH node examples/driver-gammu-json.js
+	PATH=../gammu-json-simulator/bin:$PATH node examples/driver-gammu-json.js
 
 ## Seeing what's going on
 
