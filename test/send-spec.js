@@ -127,14 +127,41 @@ describe('send', function() {
 
     // then
     assert.equal(stubs.save.callCount, 2);
-    assert.ok(stubs.save.args, [{
-        to: '+15035551212',
-        content: 'This is a simple test message.'
+    assert.ok(stubs.save.args, [
+        ['+15035551212', 'This is a simple test message.'],
+        [ '+15035551213', 'This is another simple test message.']
+      ]);
+    assert.deepEqual(response, [
+      {
+        "parts_sent": 1,
+        "index": 1,
+        "parts_total": 1,
+        "parts": [
+         {
+          "index": 1,
+          "reference": 1,
+          "status": 0,
+          "content": "This is a simple test message.",
+          "result": "success"
+         }
+        ],
+        "result": "success"
       },
       {
-        to: '+15035551213',
-        content: 'This is another simple test message.'
-      }]);
-    assert.deepEqual(response, {});
+        "parts_sent": 1,
+        "index": 2,
+        "parts_total": 1,
+        "parts": [
+         {
+          "index": 1,
+          "reference": 2,
+          "status": 0,
+          "content": "This is another simple test message.",
+          "result": "success"
+         }
+        ],
+        "result": "success"
+      }
+    ]);
   });
 });
